@@ -9,7 +9,7 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
   public partial class Pyramid : GH_Component
   {
@@ -22,8 +22,8 @@ namespace Plugin_1_Day_3
     /// </summary>
     public Pyramid()
       : base("Pyramid", "Computes a Pyramid",
-        "Workshop Test Component - Pyramid",
-        "Workshop", "Utilities")
+        "WorkBench Test Component - Pyramid",
+        "WorkBench", "Utilities")
     {
     }
 

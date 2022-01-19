@@ -9,7 +9,7 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
   public class Centroid : GH_Component
   {
@@ -22,8 +22,8 @@ namespace Plugin_1_Day_3
     /// </summary>
     public Centroid()
       : base("Centroid", "Computes Centroid",
-        "Workshop Test Component - Centroid",
-        "Workshop", "Utilities")
+        "WorkBench Test Component - Centroid",
+        "WorkBench", "Utilities")
     {
     }
 

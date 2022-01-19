@@ -9,7 +9,7 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
   public class Averages : GH_Component
   {
@@ -22,8 +22,8 @@ namespace Plugin_1_Day_3
     /// </summary>
     public Averages()
       : base("Averages", "Computes Averages",
-        "Workshop Test Component - Averages",
-        "Workshop", "Utilities")
+        "WorkBench Test Component - Averages",
+        "WorkBench", "Utilities")
     {
     }
 

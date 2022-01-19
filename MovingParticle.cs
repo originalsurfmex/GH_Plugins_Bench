@@ -9,7 +9,7 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
   public class MovingParticle : GH_Component
   {
@@ -22,8 +22,8 @@ namespace Plugin_1_Day_3
     /// </summary>
     public MovingParticle()
       : base("Moving Particle", "Computes a Moving Particle",
-        "Workshop Test Component - Moving Particle.  The point data is persistent and this component requires a timed trigger.",
-        "Workshop", "Utilities")
+        "WorkBench Test Component - Moving Particle.  The point data is persistent and this component requires a timed trigger.",
+        "WorkBench", "Utilities")
     {
     }
 

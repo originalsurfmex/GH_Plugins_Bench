@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <Version>1.0</Version>
     <Title>Plugin_1_Day_3</Title>
-    <Description>Description of Plugin_1_Day_3</Description>
+    <Description>Description of WorkBench</Description>
     <TargetExt>.gha</TargetExt>
   </PropertyGroup>
   

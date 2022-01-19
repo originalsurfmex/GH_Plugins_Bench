@@ -5,9 +5,9 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
-  public class Plugin_1_Day_3Component : GH_Component
+  public class WorkBenchComponent : GH_Component
   {
     /// <summary>
     /// Each implementation of GH_Component must provide a public 
@@ -16,10 +16,10 @@ namespace Plugin_1_Day_3
     /// Subcategory the panel. If you use non-existing tab or panel names, 
     /// new tabs/panels will automatically be created.
     /// </summary>
-    public Plugin_1_Day_3Component()
+    public WorkBenchComponent()
       : base("TestComponent", "Does Nothing My Dude",
-        "Workshop Test Component",
-        "Workshop", "Misc")
+        "WorkBench Test Component",
+        "WorkBench", "Misc")
     {
     }
 

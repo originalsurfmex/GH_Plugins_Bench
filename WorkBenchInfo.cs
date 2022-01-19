@@ -4,11 +4,11 @@ using System.Linq;
 using Grasshopper;
 using Grasshopper.Kernel;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
-  public class Plugin_1_Day_3Info : GH_AssemblyInfo
+  public class WorkBenchInfo : GH_AssemblyInfo
   {
-    public override string Name => "Plugin_1_Day_3 Info";
+    public override string Name => "WorkBench";
 
     //Return a 24x24 pixel bitmap to represent this GHA library.
     //public override Bitmap Icon => null;
@@ -29,7 +29,7 @@ namespace Plugin_1_Day_3
     //*/
 
     //Return a short string describing the purpose of this GHA library.
-    public override string Description => "Workshop";
+    public override string Description => "WorkBench";
 
     public override Guid Id => new Guid("F692A962-AEE5-4D01-853C-4CC14EB4E520");
 
@@ -48,8 +48,8 @@ namespace Plugin_1_Day_3
       var resourceName = assembly.GetManifestResourceNames().Single(n => n.EndsWith("AverageIcon.png"));
       var stream = assembly.GetManifestResourceStream(resourceName);
       Bitmap dasIcon = new Bitmap(stream);
-      Grasshopper.Instances.ComponentServer.AddCategoryIcon("Workshop", dasIcon);
-      Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Workshop", 'w');
+      Grasshopper.Instances.ComponentServer.AddCategoryIcon("WorkBench", dasIcon);
+      Grasshopper.Instances.ComponentServer.AddCategorySymbolName("WorkBench", 'w');
       return Grasshopper.Kernel.GH_LoadingInstruction.Proceed;
     }
   }

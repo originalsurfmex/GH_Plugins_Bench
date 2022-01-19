@@ -9,7 +9,7 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
-namespace Plugin_1_Day_3
+namespace WorkBench
 {
       /// <summary>
       /// Pyramid - Base, Length, Width, Height
