@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
-using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -30,19 +26,19 @@ namespace WorkBench
     /// <summary>
     /// Registers all the input parameters for this component.
     /// </summary>
-    protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+    protected override void RegisterInputParams(GH_InputParamManager pManager)
     {
       pManager.AddPlaneParameter("Base Plane", "Base Plane", "Base Plane", GH_ParamAccess.item);
       pManager.AddNumberParameter("Length", "Length", "Length", GH_ParamAccess.item);
       pManager.AddNumberParameter("Width", "Width", "Width", GH_ParamAccess.item);
       pManager.AddNumberParameter("Height", "Height", "Height", GH_ParamAccess.item);
-      pManager.AddPointParameter("Points", "Points", "Points", GH_ParamAccess.list);
+      //pManager.AddPointParameter("Points", "Points", "Points", GH_ParamAccess.list);
     }
 
     /// <summary>
     /// Registers all the output parameters for this component.
     /// </summary>
-    protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+    protected override void RegisterOutputParams(GH_OutputParamManager pManager)
     {
       pManager.AddCurveParameter("Display Lines", "Display Lines", "Display Lines", GH_ParamAccess.item);
       pManager.AddNumberParameter("Volume", "Volume", "Volume", GH_ParamAccess.item);
@@ -53,32 +49,32 @@ namespace WorkBench
     /// <summary>
     /// This is the method that actually does the work.
     /// </summary>
-    /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
+    /// <param name="da">The DA object can be used to retrieve data from input parameters and 
     /// to store data in output parameters.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void SolveInstance(IGH_DataAccess da)
     {
       Plane iBasePlane = Plane.WorldXY;
       double iLen = 1.0;
       double iWid = 1.0;
       double iHt = 1.0;
-      DA.GetData("Base Plane", ref iBasePlane);
-      DA.GetData("Length", ref iLen);
-      DA.GetData("Width", ref iWid);
-      DA.GetData("Height", ref iHt);
+      da.GetData("Base Plane", ref iBasePlane);
+      da.GetData("Length", ref iLen);
+      da.GetData("Width", ref iWid);
+      da.GetData("Height", ref iHt);
 
-      var dasPyr = new PyramidBLWH(iBasePlane, iWid, iLen, iHt);
+      var dasPyr = new PyramidBlwh(iBasePlane, iWid, iLen, iHt);
       // curves
       List <LineCurve> displayLines = dasPyr.ComputeDisplayLines();
-      DA.SetDataList("Display Lines", displayLines);
+      da.SetDataList("Display Lines", displayLines);
       // volume
       double volume = dasPyr.ComputeVolume();
-      DA.SetData("Volume", volume);
+      da.SetData("Volume", volume);
       // surfaces
       List<Surface> srf = dasPyr.ComputeSurfaces();
-      DA.SetDataList("Surfaces", srf);
+      da.SetDataList("Surfaces", srf);
 
       List<Point3d> pts = dasPyr.OutPoints();
-      DA.SetDataList("Points", pts);
+      da.SetDataList("Points", pts);
     }
 
     /// <summary>
@@ -88,7 +84,7 @@ namespace WorkBench
     /// return Resources.IconForThisComponent;
     /// </summary>
     //protected override System.Drawing.Bitmap Icon => null;
-    protected override System.Drawing.Bitmap Icon
+    protected override Bitmap Icon
     {
       get
       {

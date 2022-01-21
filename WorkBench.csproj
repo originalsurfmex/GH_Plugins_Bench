@@ -35,6 +35,15 @@
     <None Remove="PyramidIcon.png" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Reference Include="Plankton">
+      <HintPath>C:\Users\ray\AppData\Roaming\McNeel\Rhinoceros\packages\7.0\plankton\0.4.2\Plankton.dll</HintPath>
+    </Reference>
+    <Reference Include="PlanktonGh">
+      <HintPath>C:\Users\ray\AppData\Roaming\McNeel\Rhinoceros\packages\7.0\plankton\0.4.2\PlanktonGh.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
     <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
     <StartArguments></StartArguments>

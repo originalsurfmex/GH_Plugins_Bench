@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
-using Grasshopper;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 namespace WorkBench
 {
@@ -30,7 +24,7 @@ namespace WorkBench
     /// <summary>
     /// Registers all the input parameters for this component.
     /// </summary>
-    protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+    protected override void RegisterInputParams(GH_InputParamManager pManager)
     {
       pManager.AddNumberParameter("first num", "first num", "the first num", GH_ParamAccess.item, 0.0);
       pManager.AddNumberParameter("second num", "second num", "the second num", GH_ParamAccess.item, 0.0);
@@ -39,7 +33,7 @@ namespace WorkBench
     /// <summary>
     /// Registers all the output parameters for this component.
     /// </summary>
-    protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+    protected override void RegisterOutputParams(GH_OutputParamManager pManager)
     {
       pManager.AddNumberParameter("Average", "Average", "average of inputs", GH_ParamAccess.item);
     }
@@ -47,20 +41,20 @@ namespace WorkBench
     /// <summary>
     /// This is the method that actually does the work.
     /// </summary>
-    /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
+    /// <param name="da">The DA object can be used to retrieve data from input parameters and 
     /// to store data in output parameters.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void SolveInstance(IGH_DataAccess da)
     {
       double a = double.NaN;
       double b = double.NaN;
       
-      bool checkA = DA.GetData(0, ref a);
-      bool checkB = DA.GetData(1, ref b);
+      bool checkA = da.GetData(0, ref a);
+      bool checkB = da.GetData(1, ref b);
 
       if (checkA || checkB)
       {
         double average = 0.5 * (a + b);
-        DA.SetData(0, average);       
+        da.SetData(0, average);       
       }
       else
       {
@@ -78,7 +72,7 @@ namespace WorkBench
     /// return Resources.IconForThisComponent;
     /// </summary>
     //protected override System.Drawing.Bitmap Icon => null;
-    protected override System.Drawing.Bitmap Icon
+    protected override Bitmap Icon
     {
       get
       {

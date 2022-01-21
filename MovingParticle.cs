@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
-using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -30,7 +25,7 @@ namespace WorkBench
     /// <summary>
     /// Registers all the input parameters for this component.
     /// </summary>
-    protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+    protected override void RegisterInputParams(GH_InputParamManager pManager)
     {
       pManager.AddBooleanParameter("Reset", "Reset", "Reset", GH_ParamAccess.item);
       pManager.AddVectorParameter("Velocity", "Velocity", "Velocity", GH_ParamAccess.item);
@@ -39,34 +34,34 @@ namespace WorkBench
     /// <summary>
     /// Registers all the output parameters for this component.
     /// </summary>
-    protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+    protected override void RegisterOutputParams(GH_OutputParamManager pManager)
     {
       pManager.AddPointParameter("Particle", "Particle", "Particle", GH_ParamAccess.item);
     }
 
     //persistent data
-    private Point3d currentPosition;
+    private Point3d _currentPosition;
 
     /// <summary>
     /// This is the method that actually does the work.
     /// </summary>
-    /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
+    /// <param name="da">The DA object can be used to retrieve data from input parameters and 
     /// to store data in output parameters.</param>
-    protected override void SolveInstance(IGH_DataAccess DA)
+    protected override void SolveInstance(IGH_DataAccess da)
     {
       bool iReset = false;
-      DA.GetData("Reset", ref iReset);
+      da.GetData("Reset", ref iReset);
 
       if (iReset)
-        currentPosition = new Point3d(0.0, 0.0, 0.0);
+        _currentPosition = new Point3d(0.0, 0.0, 0.0);
       else
       {
         Vector3d iVelocity = new Vector3d(0.0, 0.0, 0.0);
-        DA.GetData("Velocity", ref iVelocity);
-        currentPosition += iVelocity;
+        da.GetData("Velocity", ref iVelocity);
+        _currentPosition += iVelocity;
       }
 
-      DA.SetData("Particle", currentPosition);
+      da.SetData("Particle", _currentPosition);
     }
 
     /// <summary>
@@ -76,7 +71,7 @@ namespace WorkBench
     /// return Resources.IconForThisComponent;
     /// </summary>
     //protected override System.Drawing.Bitmap Icon => null;
-    protected override System.Drawing.Bitmap Icon
+    protected override Bitmap Icon
     {
       get
       {

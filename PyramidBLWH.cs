@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
-using Grasshopper;
-using Grasshopper.Kernel;
+﻿using System.Collections.Generic;
 using Rhino.Geometry;
 
 namespace WorkBench
@@ -14,7 +6,7 @@ namespace WorkBench
       /// <summary>
       /// Pyramid - Base, Length, Width, Height
       /// </summary>
-      public class PyramidBLWH
+      public class PyramidBlwh
       {
         public Plane BasePlane;
         public double Length;
@@ -28,7 +20,7 @@ namespace WorkBench
         /// <param name="length"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public PyramidBLWH(Plane basePlane, double length, double width, double height)
+        public PyramidBlwh(Plane basePlane, double length, double width, double height)
         {
           BasePlane = basePlane;
           Length = length;
@@ -42,7 +34,7 @@ namespace WorkBench
         /// <param name="length"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public PyramidBLWH(double length, double width, double height)
+        public PyramidBlwh(double length, double width, double height)
         {
           BasePlane = Plane.WorldXY;
           Length = length;
@@ -53,7 +45,7 @@ namespace WorkBench
         /// <summary>
         /// Pyramid - World XY Base Plane, Length = 1.0, Width = 1.0, Height = 1.0;
         /// </summary>
-        public PyramidBLWH() // DEFAULT constructor
+        public PyramidBlwh() // DEFAULT constructor
         {
           BasePlane = Plane.WorldXY;
           Length = 1.0;
@@ -73,24 +65,24 @@ namespace WorkBench
         public List<LineCurve> ComputeDisplayLines()
         {
           // BASE POINTS!
-          Point3d A = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-          Point3d B = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-          Point3d C = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
-          Point3d D = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+          Point3d a = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+          Point3d b = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+          Point3d c = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+          Point3d d = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
           // PEAK!
-          Point3d M = BasePlane.Origin + BasePlane.ZAxis * Height;
+          Point3d m = BasePlane.Origin + BasePlane.ZAxis * Height;
 
           var displayLines = new List<LineCurve>();
           // DRAW THE BASE!
-          displayLines.Add(new LineCurve(A,B));
-          displayLines.Add(new LineCurve(B,C));
-          displayLines.Add(new LineCurve(C,D));
-          displayLines.Add(new LineCurve(D,A));
+          displayLines.Add(new LineCurve(a,b));
+          displayLines.Add(new LineCurve(b,c));
+          displayLines.Add(new LineCurve(c,d));
+          displayLines.Add(new LineCurve(d,a));
           // DRAW THE CORNERS TO PEAK!
-          displayLines.Add(new LineCurve(A,M));
-          displayLines.Add(new LineCurve(B,M));
-          displayLines.Add(new LineCurve(C,M));
-          displayLines.Add(new LineCurve(D,M));
+          displayLines.Add(new LineCurve(a,m));
+          displayLines.Add(new LineCurve(b,m));
+          displayLines.Add(new LineCurve(c,m));
+          displayLines.Add(new LineCurve(d,m));
 
           return displayLines;
         }
@@ -98,22 +90,22 @@ namespace WorkBench
         public List<Surface> ComputeSurfaces()
         {
           // BASE POINTS!
-          Point3d A = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-          Point3d B = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-          Point3d C = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
-          Point3d D = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+          Point3d a = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+          Point3d b = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+          Point3d c = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+          Point3d d = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
           // PEAK!
-          Point3d M = BasePlane.Origin + BasePlane.ZAxis * Height;
+          Point3d m = BasePlane.Origin + BasePlane.ZAxis * Height;
 
           var displaySurf = new List<Surface>();
 
           displaySurf.AddRange(new List<Surface>
           {
-            NurbsSurface.CreateFromCorners(A, B, C, D),
-            NurbsSurface.CreateFromCorners(A, B, M),
-            NurbsSurface.CreateFromCorners(B, C, M),
-            NurbsSurface.CreateFromCorners(C, D, M),
-            NurbsSurface.CreateFromCorners(D, A, M)
+            NurbsSurface.CreateFromCorners(a, b, c, d),
+            NurbsSurface.CreateFromCorners(a, b, m),
+            NurbsSurface.CreateFromCorners(b, c, m),
+            NurbsSurface.CreateFromCorners(c, d, m),
+            NurbsSurface.CreateFromCorners(d, a, m)
           });
 
           return displaySurf;
@@ -122,21 +114,21 @@ namespace WorkBench
         public List<Point3d> OutPoints()
                 {
                   // BASE POINTS!
-                  Point3d A = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-                  Point3d B = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
-                  Point3d C = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
-                  Point3d D = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+                  Point3d a = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+                  Point3d b = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 + BasePlane.YAxis * Width * 0.5;
+                  Point3d c = BasePlane.Origin - BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
+                  Point3d d = BasePlane.Origin + BasePlane.XAxis * Length * 0.5 - BasePlane.YAxis * Width * 0.5;
                   // PEAK!
-                  Point3d M = BasePlane.Origin + BasePlane.ZAxis * Height;
+                  Point3d m = BasePlane.Origin + BasePlane.ZAxis * Height;
         
                   var outPts = new List<Point3d>();
                   outPts.AddRange(new List<Point3d>
                   {
-                    new Point3d(A),
-                    new Point3d(B),
-                    new Point3d(C),
-                    new Point3d(D),
-                    new Point3d(M)
+                    new Point3d(a),
+                    new Point3d(b),
+                    new Point3d(c),
+                    new Point3d(d),
+                    new Point3d(m)
                   });
 
                   return outPts;

@@ -38,19 +38,23 @@ namespace WorkBench
 
     //Return a string representing your preferred contact details.
     public override string AuthorContact => "da moon";
-  }
+ }
 
-  public class CategoryIcon : Grasshopper.Kernel.GH_AssemblyPriority
+  public class CategoryIcon : GH_AssemblyPriority
   {
-    public override Grasshopper.Kernel.GH_LoadingInstruction PriorityLoad()
+    public override GH_LoadingInstruction PriorityLoad()
     {
       var assembly = System.Reflection.Assembly.GetExecutingAssembly();
       var resourceName = assembly.GetManifestResourceNames().Single(n => n.EndsWith("AverageIcon.png"));
       var stream = assembly.GetManifestResourceStream(resourceName);
-      Bitmap dasIcon = new Bitmap(stream);
-      Grasshopper.Instances.ComponentServer.AddCategoryIcon("WorkBench", dasIcon);
-      Grasshopper.Instances.ComponentServer.AddCategorySymbolName("WorkBench", 'w');
-      return Grasshopper.Kernel.GH_LoadingInstruction.Proceed;
+      if (stream != null)
+      {
+          Bitmap dasIcon = new Bitmap(stream);
+          Instances.ComponentServer.AddCategoryIcon("WorkBench", dasIcon);
+      }
+
+      Instances.ComponentServer.AddCategorySymbolName("WorkBench", 'w');
+      return GH_LoadingInstruction.Proceed;
     }
   }
 }
