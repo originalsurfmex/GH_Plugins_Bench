@@ -14,6 +14,7 @@
   
   <ItemGroup>
     <None Remove="icon.png" />
+    <None Remove="Images\MeshGrowth.png" />
   </ItemGroup>
   
   <ItemGroup>
@@ -21,6 +22,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Images\CentroidIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\MeshGrowth.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Images\MovingParticleIcon.png">

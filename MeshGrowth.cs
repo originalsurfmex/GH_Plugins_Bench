@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using Grasshopper.Kernel;
-using PlanktonGh;
 using Rhino.Geometry;
+
 
 namespace WorkBench
 {
@@ -11,6 +14,7 @@ namespace WorkBench
         /// Initializes a new instance of the MeshGrowth class.
         /// </summary>
 
+        // persistent variable within the class
         private MeshGrowthSystem _myMeshGrowthSystem;
 
         public MeshGrowth()
@@ -58,52 +62,93 @@ namespace WorkBench
         protected override void SolveInstance(IGH_DataAccess da)
         {
             bool iReset = true;
+            da.GetData("Reset", ref iReset);
             Mesh iStartingMesh = null;
+            da.GetData("Starting Mesh", ref iStartingMesh);
             int iSubIterationCount = 0;
+            da.GetData("Sub-iteration Count", ref iSubIterationCount);
             bool iGrow = false;
+            da.GetData("Grow", ref iGrow);
             int iMaxVertexCount = 0;
+            da.GetData("Max Vertex Count", ref iMaxVertexCount);
             double iEdgeLengthConstrainWeight = 0.0;
+            da.GetData("Edge Length Constraint Weight", ref iEdgeLengthConstrainWeight);
             double iCollisionDistance = 0.0;
+            da.GetData("Collision Distance", ref iCollisionDistance);
             double iCollisionWeight = 0.0;
+            da.GetData("Collision Weight", ref iCollisionWeight);
             double iBendingResistanceWeight = 0.0;
+            da.GetData("Bending Resistance Weight", ref iBendingResistanceWeight);
             bool iRTree = false;
+            da.GetData("R-Tree", ref iRTree);
+
 
             //=====================================================================================================
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // if this gets reset then restart with a fresh mesh
+            // the null part is there because otherwise it requires a reset on the first go
             if (iReset || _myMeshGrowthSystem == null)
-                // ReSharper disable once ExpressionIsAlwaysNull
-                _myMeshGrowthSystem = new MeshGrowthSystem(iStartingMesh.ToPlanktonMesh());
+                _myMeshGrowthSystem = new MeshGrowthSystem(iStartingMesh);
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            _myMeshGrowthSystem.Grow = iGrow;
+            _myMeshGrowthSystem.Grow = iGrow; // connect the boolean to the system - grow/no grow
             _myMeshGrowthSystem.MaxVertexCount = iMaxVertexCount;
             _myMeshGrowthSystem.EdgeLengthConstrainWeight = iEdgeLengthConstrainWeight;
-            _myMeshGrowthSystem.CollisionDistance = iCollisionDistance;
             _myMeshGrowthSystem.CollisionWeight = iCollisionWeight;
             _myMeshGrowthSystem.BendingResistanceWeight = iBendingResistanceWeight;
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             _myMeshGrowthSystem.UseRTree = iRTree;
+            _myMeshGrowthSystem.CollisionDistance = iCollisionDistance;
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            // this does the work every time the component runs this runs once
+            // this also allows a slider to control the iterations instead of a timer/trigger
+            // if a timer/trigger is used then the slider should be set to however many iterations per trigger (typ 1)
             for (int i = 0; i < iSubIterationCount; i++)
                 _myMeshGrowthSystem.Update();
 
-            da.SetData("Mesh", _myMeshGrowthSystem.Mesh.ToRhinoMesh());
+            // output a rhino mesh after all the plankton work is done
+            da.SetData("Mesh", _myMeshGrowthSystem.GetRhinoMesh());
         }
 
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
+
+        /*
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if (iReset || _myMeshGrowthSystem == null)
+            // ReSharper disable once ExpressionIsAlwaysNull
+            _myMeshGrowthSystem = new MeshGrowthSystem(iStartingMesh.ToPlanktonMesh());
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        _myMeshGrowthSystem.Grow = iGrow;
+        _myMeshGrowthSystem.MaxVertexCount = iMaxVertexCount;
+        _myMeshGrowthSystem.EdgeLengthConstrainWeight = iEdgeLengthConstrainWeight;
+        _myMeshGrowthSystem.CollisionDistance = iCollisionDistance;
+        _myMeshGrowthSystem.CollisionWeight = iCollisionWeight;
+        _myMeshGrowthSystem.BendingResistanceWeight = iBendingResistanceWeight;
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        _myMeshGrowthSystem.UseRTree = iRTree;
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        for (int i = 0; i < iSubIterationCount; i++)
+            _myMeshGrowthSystem.Update();
+
+        da.SetData("Mesh", _myMeshGrowthSystem.Mesh.ToRhinoMesh());
+    }
+    */
+    /// <summary>
+    /// Provides an Icon for the component.
+    /// </summary>
+    protected override Bitmap Icon
+    {
+      get
+      {
+        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
         {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return null;
-            }
+          var resourceName = assembly.GetManifestResourceNames().Single(n => n.EndsWith("MeshGrowth.png"));
+          var stream = assembly.GetManifestResourceStream(resourceName);
+          if (stream != null) return new Bitmap(stream);
         }
+        return null;
+      }
+    }
+        
 
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
