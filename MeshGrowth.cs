@@ -108,30 +108,6 @@ namespace WorkBench
             da.SetData("Mesh", _myMeshGrowthSystem.GetRhinoMesh());
         }
 
-
-        /*
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        if (iReset || _myMeshGrowthSystem == null)
-            // ReSharper disable once ExpressionIsAlwaysNull
-            _myMeshGrowthSystem = new MeshGrowthSystem(iStartingMesh.ToPlanktonMesh());
-
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        _myMeshGrowthSystem.Grow = iGrow;
-        _myMeshGrowthSystem.MaxVertexCount = iMaxVertexCount;
-        _myMeshGrowthSystem.EdgeLengthConstrainWeight = iEdgeLengthConstrainWeight;
-        _myMeshGrowthSystem.CollisionDistance = iCollisionDistance;
-        _myMeshGrowthSystem.CollisionWeight = iCollisionWeight;
-        _myMeshGrowthSystem.BendingResistanceWeight = iBendingResistanceWeight;
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        _myMeshGrowthSystem.UseRTree = iRTree;
-
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        for (int i = 0; i < iSubIterationCount; i++)
-            _myMeshGrowthSystem.Update();
-
-        da.SetData("Mesh", _myMeshGrowthSystem.Mesh.ToRhinoMesh());
-    }
-    */
     /// <summary>
     /// Provides an Icon for the component.
     /// </summary>

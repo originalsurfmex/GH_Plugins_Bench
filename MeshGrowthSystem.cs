@@ -28,8 +28,8 @@ namespace WorkBench
         public double CollisionWeight; // how strongly the sphere can "push"
         public double BendingResistanceWeight;
 
-        private List<Vector3d> totalWeightedMoves;
-        private List<double> totalWeights; // each vertex has a total weight
+        private List<Vector3d> _totalWeightedMoves;
+        private List<double> _totalWeights; // each vertex has a total weight
 
         public MeshGrowthSystem(Mesh startingMesh) //takes in a Rhino Mesh and converts to a plankton mesh
         {
@@ -45,13 +45,13 @@ namespace WorkBench
         {
             if (Grow) SplitAllLongEdges();
 
-            totalWeightedMoves = new List<Vector3d>();
-            totalWeights = new List<double>();
+            _totalWeightedMoves = new List<Vector3d>();
+            _totalWeights = new List<double>();
 
             foreach (var unused in _ptMesh.Vertices)
             {
-                totalWeightedMoves.Add(new Vector3d(0, 0, 0));
-                totalWeights.Add(0.0);
+                _totalWeightedMoves.Add(new Vector3d(0, 0, 0));
+                _totalWeights.Add(0.0);
             }
 
             //ProcessCollision();
@@ -104,11 +104,11 @@ namespace WorkBench
                     the new INCREMENT VALUE used for averages is now the 'collision weight'
                     this is more elegant than just taking all the weights and averaging them
                     */
-                    totalWeightedMoves[i] += CollisionWeight * move;
-                    totalWeightedMoves[j] -= CollisionWeight * move;
+                    _totalWeightedMoves[i] += CollisionWeight * move;
+                    _totalWeightedMoves[j] -= CollisionWeight * move;
                     // if we didn't use a collision weighting system then this would just be 1.0
-                    totalWeights[i] += CollisionWeight;
-                    totalWeights[j] += CollisionWeight;
+                    _totalWeights[i] += CollisionWeight;
+                    _totalWeights[j] += CollisionWeight;
                 }
         }
 
@@ -143,11 +143,11 @@ namespace WorkBench
                     // 0.5 makes it nudge out into a sphere, other amounts change the shape/proportion
                     move *= 0.5 * (currentDistance - CollisionDistance) / currentDistance;
 
-                    totalWeightedMoves[i] += CollisionWeight * move;
-                    totalWeightedMoves[j] -= CollisionWeight * move;
+                    _totalWeightedMoves[i] += CollisionWeight * move;
+                    _totalWeightedMoves[j] -= CollisionWeight * move;
                     // if we didn't use a collision weighting system then this would just be 1.0
-                    totalWeights[i] += CollisionWeight;
-                    totalWeights[j] += CollisionWeight;
+                    _totalWeights[i] += CollisionWeight;
+                    _totalWeights[j] += CollisionWeight;
 
                 }
             }
@@ -186,17 +186,17 @@ namespace WorkBench
                 // get the vector between the current point and the closest point, add it into the summed list per point
                 // similar to the process collisions, a slider gives control so that bending resistance can be
                 // manually weighted and adjusted.  see explanation in comments of collision process function
-                totalWeightedMoves[j] += BendingResistanceWeight * (plane.ClosestPoint(vJ) - vJ);
-                totalWeightedMoves[k] += BendingResistanceWeight * (plane.ClosestPoint(vK) - vK);
-                totalWeightedMoves[p] += BendingResistanceWeight * (plane.ClosestPoint(vP) - vP);
-                totalWeightedMoves[q] += BendingResistanceWeight * (plane.ClosestPoint(vQ) - vQ);
+                _totalWeightedMoves[j] += BendingResistanceWeight * (plane.ClosestPoint(vJ) - vJ);
+                _totalWeightedMoves[k] += BendingResistanceWeight * (plane.ClosestPoint(vK) - vK);
+                _totalWeightedMoves[p] += BendingResistanceWeight * (plane.ClosestPoint(vP) - vP);
+                _totalWeightedMoves[q] += BendingResistanceWeight * (plane.ClosestPoint(vQ) - vQ);
 
                 // increment the total quantity of vectors so that it may be averaged later
                 // if we didn't use a bending resistance weighting system then this would just be 1.0
-                totalWeights[j] += BendingResistanceWeight; 
-                totalWeights[k] += BendingResistanceWeight; 
-                totalWeights[p] += BendingResistanceWeight; 
-                totalWeights[q] += BendingResistanceWeight; 
+                _totalWeights[j] += BendingResistanceWeight; 
+                _totalWeights[k] += BendingResistanceWeight; 
+                _totalWeights[p] += BendingResistanceWeight; 
+                _totalWeights[q] += BendingResistanceWeight; 
             }
         }
 
@@ -224,12 +224,12 @@ namespace WorkBench
 
                 // see comments on bending resistance and process collision to explain the weighting concept
                 // move the vectors in opposite directions
-                totalWeightedMoves[j] += move * EdgeLengthConstrainWeight;
-                totalWeightedMoves[k] -= move * EdgeLengthConstrainWeight;
+                _totalWeightedMoves[j] += move * EdgeLengthConstrainWeight;
+                _totalWeightedMoves[k] -= move * EdgeLengthConstrainWeight;
 
                 // used to get the averages without the weighting system this would just be 1.0;
-                totalWeights[j] += EdgeLengthConstrainWeight;
-                totalWeights[k] += EdgeLengthConstrainWeight;
+                _totalWeights[j] += EdgeLengthConstrainWeight;
+                _totalWeights[k] += EdgeLengthConstrainWeight;
             }
         }
 
@@ -237,43 +237,14 @@ namespace WorkBench
         {
             for (int i = 0; i < _ptMesh.Vertices.Count; i++)
             {
-                if (totalWeights[i] == 0.0) continue;
+                if (_totalWeights[i] == 0.0) continue;
 
                 // gather all the weighted moves and average them into one vector
-                Vector3d move = totalWeightedMoves[i] / totalWeights[i];
+                Vector3d move = _totalWeightedMoves[i] / _totalWeights[i];
                 Point3d newPosition = _ptMesh.Vertices[i].ToPoint3d() + move;
                 _ptMesh.Vertices.SetVertex(i, newPosition.X, newPosition.Y, newPosition.Z);
             }
         }
-
-
-        /*
-        private List<Vector3d> totalWeightedMoves;
-        private List<double> totalWeights;
-
-        public MeshGrowthSystem(PlanktonMesh startingPtMesh)
-        {
-            ptMesh = startingPtMesh;
-        }
-
-        public void Update()
-        {
-            if (Grow) SplitAllLongEdges();
-
-            totalWeightedMoves = new List<Vector3d>();
-            totalWeights.Add(0.0);
-
-            for (int i = 0; i < ptMesh.Vertices.Count; i++)
-            {
-                totalWeightedMoves.Add(Vector3d.Zero);
-                totalWeights.Add(0.0);
-            }
-
-            ProcessEdgeLengthConstraint();
-            ProcessCollision();
-            UpdateVertexPositionsAndVelocities();
-        }
-        */
 
         private void SplitEdge(int edgeIndex)
         {
@@ -292,70 +263,5 @@ namespace WorkBench
                     _ptMesh.Halfedges[_ptMesh.Halfedges[edgeIndex + 1].NextHalfedge].NextHalfedge);
         }
 
-        /*
-        private void SplitAllLongEdges()
-        {
-            int halfedgeCount = ptMesh.Halfedges.Count;
-
-            for (int k = 0; k < halfedgeCount; k += 2)
-                if (ptMesh.Vertices.Count < MaxVertexCount &&
-                    ptMesh.Halfedges.GetLength(k) > 0.99 * CollisionDistance)
-                {
-                    SplitEdge(k);
-                }
-        }
-
-        private void ProcessEdgeLengthConstraint()
-        {
-            int halfEdgeCount = ptMesh.Halfedges.Count;
-
-            for (int k = 0; k < halfEdgeCount; k += 2)
-            {
-                PlanktonHalfedge halfedge = ptMesh.Halfedges[k];
-                int i = halfedge.StartVertex;
-                int j = ptMesh.Halfedges[halfedge.NextHalfedge].StartVertex;
-
-                Vector3d d = ptMesh.Vertices[j].ToPoint3d() - ptMesh.Vertices[i].ToPoint3d();
-                if (d.Length > CollisionDistance)
-                {
-                    Vector3d move = EdgeLengthConstrainWeight * 0.5 * (d);
-                    totalWeightedMoves[i] += move;
-                    totalWeightedMoves[j] -= move;
-                    totalWeights[i] += EdgeLengthConstrainWeight;
-                    totalWeights[j] += EdgeLengthConstrainWeight;
-
-                }
-            }
-        }
-
-        private void ProcessCollision()
-        {
-            for (int i = 0; i < ptMesh.Vertices.Count; i++)
-            for (int j = i + 1; j < ptMesh.Vertices.Count; j++)
-            {
-                Vector3d move = ptMesh.Vertices[j].ToPoint3d() - ptMesh.Vertices[i].ToPoint3d();
-                double currentDistance = move.Length;
-                if (currentDistance > CollisionDistance) continue;
-
-                move *= CollisionWeight * 0.5 * (currentDistance - CollisionDistance) / currentDistance;
-                totalWeightedMoves[i] += move;
-                totalWeightedMoves[j] -= move;
-                totalWeights[i] += CollisionWeight;
-                totalWeights[j] += CollisionWeight;
-            }
-        }
-
-        private void UpdateVertexPositionsAndVelocities()
-        {
-            for (int i = 0; i < ptMesh.Vertices.Count; i++)
-            {
-                if (totalWeights[i] == 0) continue;
-
-                PlanktonVertex vertex = ptMesh.Vertices[i];
-                Vector3d move = totalWeightedMoves[i] / totalWeights[i];
-                ptMesh.Vertices.SetVertex(i, vertex.X + move.X, vertex.Y + move.Y, vertex.Z + move.Z);
-            }
-        }
-        */
     }
 }
